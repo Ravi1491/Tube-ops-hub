@@ -13,4 +13,10 @@ export const applicationConfig = {
     name: process.env.DB_NAME,
     port: process.env.DB_PORT,
   },
+
+  jwt: {
+    secret: process.env.JWT_SECRET || 'secret',
+    expiresIn: process.env.JWT_EXPIRES_IN || '1d',
+    issuer: process.env.JWT_ISSUER || 'tube-ops',
+  },
 };

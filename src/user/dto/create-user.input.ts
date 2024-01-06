@@ -1,1 +1,6 @@
-export class CreateUserInput {}
+export class CreateUserInput {
+  name: string;
+  username: string;
+  email: string;
+  password: string;
+}
