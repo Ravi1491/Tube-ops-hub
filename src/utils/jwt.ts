@@ -1,5 +1,5 @@
 import { applicationConfig } from 'config';
-import { sign, decode } from 'jsonwebtoken';
+import { sign, decode, JwtPayload } from 'jsonwebtoken';
 
 export const generateJwtToken = async ({ id, email }) => {
   const token = sign(
@@ -15,7 +15,7 @@ export const generateJwtToken = async ({ id, email }) => {
     },
   );
 
-  const decodedToken = decode(token);
+  const decodedToken = decode(token) as JwtPayload;
 
   return {
     token,

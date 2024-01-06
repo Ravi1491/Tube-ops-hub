@@ -5,11 +5,13 @@ import { compare, genSalt, hash } from 'bcryptjs';
 import { UserService } from './user.service';
 import { CreateUserInput } from './dto/create-user.input';
 import { generateJwtToken } from 'src/utils/jwt';
+import { Public } from 'src/auth/decorators/public';
 
 @Resolver('User')
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
+  @Public()
   @Mutation('signUp')
   async signup(
     @Args('signUpInput') createUserInput: CreateUserInput,
@@ -63,6 +65,7 @@ export class UserResolver {
     }
   }
 
+  @Public()
   @Mutation('login')
   async login(
     @Args('email') email: string,

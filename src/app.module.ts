@@ -6,8 +6,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { applicationConfig } from 'config';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtService } from '@nestjs/jwt';
 import { join } from 'path';
+
 import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
+import { AuthGuard } from './auth/guards/auth.guard';
 
 @Module({
   imports: [
@@ -38,9 +43,17 @@ import { UserModule } from './user/user.module';
         return { req, res };
       },
     }),
+    AuthModule,
     UserModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    JwtService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ],
 })
 export class AppModule {}
