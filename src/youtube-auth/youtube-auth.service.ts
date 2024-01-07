@@ -35,6 +35,36 @@ export class YoutubeAuthService {
     return this.youtubeAuthRepository.update(id, updateYoutubeAuthDto);
   }
 
+  async getAccessToken(channelId: string) {
+    const youtubeAuth = await this.findOne({
+      channelId,
+    });
+    const currentTimestamp = Date.now();
+
+    // Check if the access token has expired
+    const hasExpired = youtubeAuth.expiresAt <= currentTimestamp;
+
+    if (hasExpired) {
+      const response = await this.generateAccessTokenUsingRefreshToken(
+        youtubeAuth.refreshToken,
+      );
+
+      // Calculate expiration timestamp by adding expiresInMilliseconds to the current timestamp
+      const expiresInMilliseconds = response.expires_in * 1000;
+      const currentTimestamp = Date.now();
+      const expiresAtTimestamp = currentTimestamp + expiresInMilliseconds;
+
+      await this.update(youtubeAuth.id, {
+        accessToken: response.access_token,
+        expiresAt: currentTimestamp + expiresAtTimestamp,
+      });
+
+      return response.access_token;
+    }
+
+    return youtubeAuth.accessToken;
+  }
+
   async generateAccessTokenUsingRefreshToken(refreshToken: string) {
     try {
       const response = await this.oauthAxiosClient.post('/token', {
