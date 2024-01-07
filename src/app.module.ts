@@ -13,6 +13,8 @@ import { join } from 'path';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { AuthGuard } from './auth/guards/auth.guard';
+import { YoutubeAuthModule } from './youtube_auth/youtube_auth.module';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -43,8 +45,10 @@ import { AuthGuard } from './auth/guards/auth.guard';
         return { req, res };
       },
     }),
+    CommonModule,
     AuthModule,
     UserModule,
+    YoutubeAuthModule,
   ],
   controllers: [AppController],
   providers: [

@@ -19,4 +19,10 @@ export const applicationConfig = {
     expiresIn: process.env.JWT_EXPIRES_IN || '1d',
     issuer: process.env.JWT_ISSUER || 'tube-ops',
   },
+
+  youtube: {
+    clientId: process.env.YOUTUBE_CLIENT_ID,
+    clientSecret: process.env.YOUTUBE_CLIENT_SECRET,
+    redirectUrl: process.env.YOUTUBE_REDIRECT_URL,
+  },
 };
