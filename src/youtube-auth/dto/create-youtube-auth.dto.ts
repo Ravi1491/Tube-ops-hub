@@ -3,5 +3,5 @@ export class CreateYoutubeAuthDto {
   refreshToken: string;
   expiresAt: number;
   channelId: string;
-  userId: any;
+  userId: string;
 }

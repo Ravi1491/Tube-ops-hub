@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { CreateYoutubeAuthDto } from './dto/create-youtube_auth.dto';
-import { UpdateYoutubeAuthDto } from './dto/update-youtube_auth.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { YoutubeAuth } from './entities/youtube_auth.entity';
 import { FindOneOptions, Repository } from 'typeorm';
 import { Axios } from 'axios';
 import { applicationConfig } from 'config';
+import { YoutubeAuth } from './entities/youtube-auth.entity';
+import { CreateYoutubeAuthDto } from './dto/create-youtube-auth.dto';
+import { UpdateYoutubeAuthDto } from './dto/update-youtube-auth.dto';
 
 @Injectable()
 export class YoutubeAuthService {

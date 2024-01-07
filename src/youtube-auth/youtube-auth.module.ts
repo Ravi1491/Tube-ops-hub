@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
-import { YoutubeAuthService } from './youtube_auth.service';
-import { YoutubeAuthController } from './youtube_auth.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { YoutubeAuth } from './entities/youtube_auth.entity';
+
+import { YoutubeAuth } from './entities/youtube-auth.entity';
+import { YoutubeAuthController } from './youtube-auth.controller';
+import { YoutubeAuthService } from './youtube-auth.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([YoutubeAuth])],

@@ -2,12 +2,12 @@ import { Request, Response } from 'express';
 import { Controller, Get, Res, Req } from '@nestjs/common';
 import { OAuth2Client } from 'google-auth-library';
 
-import { YoutubeAuthService } from './youtube_auth.service';
 import { applicationConfig } from 'config';
 import { CurrentUser } from 'src/auth/decorators/current-user';
 import { User } from 'src/user/entities/user.entity';
 import { Public } from 'src/auth/decorators/public';
 import { YoutubeService } from 'src/common/services/youtube.service';
+import { YoutubeAuthService } from './youtube-auth.service';
 
 @Controller('youtube-auth')
 export class YoutubeAuthController {
@@ -45,7 +45,9 @@ export class YoutubeAuthController {
   @Get('/callback')
   async callback(@Req() req: Request, @Res() res: Response) {
     try {
-      const { code, state } = req.query;
+      const code = req.query.code as string;
+      const state = req.query.state as string;
+
       const { tokens } = await this.oAuth2Client.getToken(code as string);
       const { access_token, refresh_token, expiry_date } = tokens;
 
