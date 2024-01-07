@@ -15,6 +15,7 @@ import { AuthModule } from './auth/auth.module';
 import { AuthGuard } from './auth/guards/auth.guard';
 import { CommonModule } from './common/common.module';
 import { YoutubeAuthModule } from './youtube-auth/youtube-auth.module';
+import { OrganizationsModule } from './organizations/organizations.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { YoutubeAuthModule } from './youtube-auth/youtube-auth.module';
     AuthModule,
     UserModule,
     YoutubeAuthModule,
+    OrganizationsModule,
   ],
   controllers: [AppController],
   providers: [
