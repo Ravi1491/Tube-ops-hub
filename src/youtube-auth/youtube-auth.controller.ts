@@ -6,7 +6,7 @@ import { applicationConfig } from 'config';
 import { CurrentUser } from 'src/auth/decorators/current-user';
 import { User } from 'src/user/entities/user.entity';
 import { Public } from 'src/auth/decorators/public';
-import { YoutubeService } from 'src/common/services/youtube.service';
+import { YoutubeApiService } from 'src/common/services/youtube-api.service';
 import { YoutubeAuthService } from './youtube-auth.service';
 
 @Controller('youtube-auth')
@@ -15,7 +15,7 @@ export class YoutubeAuthController {
 
   constructor(
     private readonly youtubeAuthService: YoutubeAuthService,
-    private readonly youtubeService: YoutubeService,
+    private readonly youtubeApiService: YoutubeApiService,
   ) {
     this.oAuth2Client = new OAuth2Client(
       applicationConfig.youtube.clientId,
@@ -51,7 +51,7 @@ export class YoutubeAuthController {
       const { tokens } = await this.oAuth2Client.getToken(code as string);
       const { access_token, refresh_token, expiry_date } = tokens;
 
-      const channel = await this.youtubeService.getChannel(access_token);
+      const channel = await this.youtubeApiService.getChannel(access_token);
       const channelData = JSON.parse(channel.data);
 
       const existingConfig = await this.youtubeAuthService.findOne({

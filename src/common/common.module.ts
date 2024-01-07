@@ -1,10 +1,10 @@
 import { Global, Module } from '@nestjs/common';
-import { YoutubeService } from './services/youtube.service';
+import { YoutubeApiService } from './services/youtube-api.service';
 
 @Global()
 @Module({
   imports: [],
-  providers: [YoutubeService],
-  exports: [YoutubeService],
+  providers: [YoutubeApiService],
+  exports: [YoutubeApiService],
 })
 export class CommonModule {}

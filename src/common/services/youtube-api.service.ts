@@ -2,11 +2,41 @@ import { Injectable } from '@nestjs/common';
 import { Axios } from 'axios';
 
 @Injectable()
-export class YoutubeService {
+export class YoutubeApiService {
   axiosClient: Axios;
 
   constructor() {
     this.axiosClient = new Axios({ baseURL: 'https://www.googleapis.com' });
+  }
+
+  async getMySubscriptions(accessToken: string) {
+    try {
+      const response = await this.axiosClient.get('/youtube/v3/subscriptions', {
+        params: {
+          part: 'snippet,contentDetails',
+          mine: true,
+        },
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async getChannel(accessToken: string) {
+    return this.axiosClient.get('/youtube/v3/channels', {
+      params: {
+        part: 'snippet,contentDetails,statistics',
+        mine: true,
+      },
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
   }
 
   async uploadVideo(accessToken: string, video: any) {
@@ -139,36 +169,6 @@ export class YoutubeService {
     } catch (error) {
       console.log(error);
     }
-  }
-
-  async getMySubscriptions(accessToken: string) {
-    try {
-      const response = await this.axiosClient.get('/youtube/v3/subscriptions', {
-        params: {
-          part: 'snippet,contentDetails',
-          mine: true,
-        },
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-      return response.data;
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async getChannel(accessToken: string) {
-    return this.axiosClient.get('/youtube/v3/channels', {
-      params: {
-        part: 'snippet,contentDetails,statistics',
-        mine: true,
-      },
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
   }
 
   async getPlaylists(accessToken: string) {
