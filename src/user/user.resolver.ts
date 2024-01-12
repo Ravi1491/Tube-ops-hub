@@ -1,11 +1,19 @@
 import { Response } from 'express';
-import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { compare, genSalt, hash } from 'bcryptjs';
+import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
 
 import { UserService } from './user.service';
 import { CreateUserInput } from './dto/create-user.input';
 import { generateJwtToken } from 'src/utils/jwt';
 import { Public } from 'src/auth/decorators/public';
+import { getErrorCodeAndMessage } from 'src/utils/helper';
+import {
+  EmailAlreadyExistError,
+  InvalidPasswordError,
+  UserNotExistError,
+  UsernameAlreadyExistError,
+} from 'src/utils/errors';
 
 @Resolver('User')
 export class UserResolver {
@@ -23,7 +31,7 @@ export class UserResolver {
       });
 
       if (user) {
-        throw new Error('Email already exists');
+        throw new EmailAlreadyExistError();
       }
 
       const isUsernameExist = await this.userService.findOne({
@@ -31,7 +39,7 @@ export class UserResolver {
       });
 
       if (isUsernameExist) {
-        throw new Error('Username already exists');
+        throw new UsernameAlreadyExistError();
       }
 
       const hashPassword = await hash(
@@ -61,7 +69,10 @@ export class UserResolver {
 
       return createUser;
     } catch (error) {
-      console.log(error);
+      throw new HttpException(
+        getErrorCodeAndMessage(error),
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
@@ -76,13 +87,13 @@ export class UserResolver {
       const user = await this.userService.findOne({ email });
 
       if (!user) {
-        throw new Error("User doesn't exist");
+        throw new UserNotExistError();
       }
 
       const isValidPassword = await compare(password, user.password);
 
       if (!isValidPassword) {
-        throw new Error('Invalid password');
+        throw new InvalidPasswordError();
       }
 
       const jwtToken = await generateJwtToken({
@@ -100,7 +111,10 @@ export class UserResolver {
 
       return user;
     } catch (error) {
-      console.log(error);
+      throw new HttpException(
+        getErrorCodeAndMessage(error),
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 

@@ -4,6 +4,8 @@ import { CreateOrganizationInput } from './dto/create-organization.input';
 import { UpdateOrganizationInput } from './dto/update-organization.input';
 import { CurrentUser } from 'src/auth/decorators/current-user';
 import { User } from 'src/user/entities/user.entity';
+import { HttpException, HttpStatus } from '@nestjs/common';
+import { getErrorCodeAndMessage } from 'src/utils/helper';
 
 @Resolver('Organization')
 export class OrganizationsResolver {
@@ -22,7 +24,10 @@ export class OrganizationsResolver {
 
       return this.organizationsService.create(createOrganizationInput);
     } catch (error) {
-      console.log(error);
+      throw new HttpException(
+        getErrorCodeAndMessage(error),
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
@@ -31,7 +36,10 @@ export class OrganizationsResolver {
     try {
       return this.organizationsService.find({ createdBy: currentUser.id });
     } catch (error) {
-      console.log(error);
+      throw new HttpException(
+        getErrorCodeAndMessage(error),
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
@@ -43,7 +51,10 @@ export class OrganizationsResolver {
     try {
       return this.organizationsService.findOne({ id });
     } catch (error) {
-      console.log(error);
+      throw new HttpException(
+        getErrorCodeAndMessage(error),
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
@@ -55,7 +66,10 @@ export class OrganizationsResolver {
     try {
       return this.organizationsService.findOne({ slug });
     } catch (error) {
-      console.log(error);
+      throw new HttpException(
+        getErrorCodeAndMessage(error),
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
@@ -66,12 +80,26 @@ export class OrganizationsResolver {
     @Args('updateOrganizationInput')
     updateOrganizationInput: UpdateOrganizationInput,
   ) {
-    return this.organizationsService.update(id, updateOrganizationInput);
+    try {
+      return this.organizationsService.update(id, updateOrganizationInput);
+    } catch (error) {
+      throw new HttpException(
+        getErrorCodeAndMessage(error),
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
   @Mutation('removeOrganization')
   async remove(@CurrentUser() currentUser: User, @Args('id') id: string) {
-    await this.organizationsService.remove(id);
-    return 'Organization removed successfully';
+    try {
+      await this.organizationsService.remove(id);
+      return 'Organization removed successfully';
+    } catch (error) {
+      throw new HttpException(
+        getErrorCodeAndMessage(error),
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 }
