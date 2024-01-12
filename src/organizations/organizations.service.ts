@@ -1,26 +1,46 @@
 import { Injectable } from '@nestjs/common';
+import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+
 import { CreateOrganizationInput } from './dto/create-organization.input';
 import { UpdateOrganizationInput } from './dto/update-organization.input';
+import { Organization } from './entities/organization.entity';
+import { generateRandomSlug } from 'src/utils/helper';
 
 @Injectable()
 export class OrganizationsService {
+  constructor(
+    @InjectRepository(Organization)
+    private organizationRepository: Repository<Organization>,
+  ) {}
+
   create(createOrganizationInput: CreateOrganizationInput) {
-    return 'This action adds a new organization';
+    return this.organizationRepository.save(createOrganizationInput);
   }
 
-  findAll() {
-    return `This action returns all organizations`;
+  findOne(payload = {}, options: FindOneOptions<Organization> = {}) {
+    return this.organizationRepository.findOne({
+      where: payload,
+      ...options,
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} organization`;
+  find(payload = {}, options: FindManyOptions<Organization> = {}) {
+    return this.organizationRepository.find({
+      where: payload,
+      ...options,
+    });
   }
 
-  update(id: number, updateOrganizationInput: UpdateOrganizationInput) {
-    return `This action updates a #${id} organization`;
+  update(id: string, updateOrganizationInput: UpdateOrganizationInput) {
+    return this.organizationRepository.update({ id }, updateOrganizationInput);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} organization`;
+  remove(id: string) {
+    return this.organizationRepository.delete({ id });
+  }
+
+  async slugify() {
+    return generateRandomSlug(this.organizationRepository);
   }
 }

@@ -21,9 +21,15 @@ export class Organization extends BaseEntity {
   @Column({ nullable: true })
   description: string;
 
+  @Column({ nullable: false, unique: true })
+  slug: string;
+
   @Column({ nullable: false })
   @ManyToOne(() => User, (user) => user.id)
   createdBy: string;
+
+  @Column({ nullable: false, default: false })
+  onBoarding: boolean;
 
   @CreateDateColumn({
     name: 'created_at',

@@ -9,11 +9,13 @@
 /* eslint-disable */
 
 export interface CreateOrganizationInput {
-    exampleField?: Nullable<number>;
+    name: string;
+    description?: Nullable<string>;
 }
 
 export interface UpdateOrganizationInput {
-    id: number;
+    name: string;
+    description?: Nullable<string>;
 }
 
 export interface SignUpInput {
@@ -24,19 +26,25 @@ export interface SignUpInput {
 }
 
 export interface Organization {
-    exampleField?: Nullable<number>;
+    id: string;
+    name: string;
+    description?: Nullable<string>;
+    slug: string;
+    createdBy: string;
+    onBoarding: boolean;
 }
 
 export interface IQuery {
-    organizations(): Nullable<Organization>[] | Promise<Nullable<Organization>[]>;
-    organization(id: number): Nullable<Organization> | Promise<Nullable<Organization>>;
+    getMyOrganizations(): Nullable<Organization>[] | Promise<Nullable<Organization>[]>;
+    getOrganizationById(id: string): Organization | Promise<Organization>;
+    getOrganizationBySlug(slug: string): Organization | Promise<Organization>;
     user(id: number): Nullable<User> | Promise<Nullable<User>>;
 }
 
 export interface IMutation {
     createOrganization(createOrganizationInput: CreateOrganizationInput): Organization | Promise<Organization>;
-    updateOrganization(updateOrganizationInput: UpdateOrganizationInput): Organization | Promise<Organization>;
-    removeOrganization(id: number): Nullable<Organization> | Promise<Nullable<Organization>>;
+    updateOrganization(id: string, updateOrganizationInput: UpdateOrganizationInput): Organization | Promise<Organization>;
+    removeOrganization(id: string): string | Promise<string>;
     signUp(signUpInput: SignUpInput): User | Promise<User>;
     login(email: string, password: string): User | Promise<User>;
 }

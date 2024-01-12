@@ -1,24 +1,35 @@
 type Organization {
-  # Example field (placeholder)
-  exampleField: Int
+  id: String!
+  name: String!
+  description: String
+  slug: String!
+  createdBy: String!
+  onBoarding: Boolean!
 }
 
 input CreateOrganizationInput {
-  # Example field (placeholder)
-  exampleField: Int
+  name: String!
+  description: String
 }
 
 input UpdateOrganizationInput {
-  id: Int!
+  name: String!
+  description: String
 }
 
 type Query {
-  organizations: [Organization]!
-  organization(id: Int!): Organization
+  getMyOrganizations: [Organization]!
+  getOrganizationById(id: String!): Organization!
+  getOrganizationBySlug(slug: String!): Organization!
 }
 
 type Mutation {
-  createOrganization(createOrganizationInput: CreateOrganizationInput!): Organization!
-  updateOrganization(updateOrganizationInput: UpdateOrganizationInput!): Organization!
-  removeOrganization(id: Int!): Organization
+  createOrganization(
+    createOrganizationInput: CreateOrganizationInput!
+  ): Organization!
+  updateOrganization(
+    id: String!
+    updateOrganizationInput: UpdateOrganizationInput!
+  ): Organization!
+  removeOrganization(id: String!): String!
 }
