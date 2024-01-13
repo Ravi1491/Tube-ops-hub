@@ -21,6 +21,8 @@ type Query {
   getMyOrganizations: [Organization]!
   getOrganizationById(id: String!): Organization!
   getOrganizationBySlug(slug: String!): Organization!
+  getOrganizationMemberById(id: String!): User!
+  getOrganizationMembers(organizationId: String!): [User]!
 }
 
 type Mutation {
@@ -32,4 +34,10 @@ type Mutation {
     updateOrganizationInput: UpdateOrganizationInput!
   ): Organization!
   removeOrganization(id: String!): String!
+
+  addOrganizationMember(organizationId: String!, userId: String!): Organization!
+  removeOrganizationMember(
+    organizationId: String!
+    userId: String!
+  ): Organization!
 }

@@ -38,6 +38,8 @@ export interface IQuery {
     getMyOrganizations(): Nullable<Organization>[] | Promise<Nullable<Organization>[]>;
     getOrganizationById(id: string): Organization | Promise<Organization>;
     getOrganizationBySlug(slug: string): Organization | Promise<Organization>;
+    getOrganizationMemberById(id: string): User | Promise<User>;
+    getOrganizationMembers(organizationId: string): Nullable<User>[] | Promise<Nullable<User>[]>;
     user(id: number): Nullable<User> | Promise<Nullable<User>>;
 }
 
@@ -45,6 +47,8 @@ export interface IMutation {
     createOrganization(createOrganizationInput: CreateOrganizationInput): Organization | Promise<Organization>;
     updateOrganization(id: string, updateOrganizationInput: UpdateOrganizationInput): Organization | Promise<Organization>;
     removeOrganization(id: string): string | Promise<string>;
+    addOrganizationMember(organizationId: string, userId: string): Organization | Promise<Organization>;
+    removeOrganizationMember(organizationId: string, userId: string): Organization | Promise<Organization>;
     signUp(signUpInput: SignUpInput): User | Promise<User>;
     login(email: string, password: string): User | Promise<User>;
 }

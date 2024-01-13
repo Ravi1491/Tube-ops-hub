@@ -6,10 +6,14 @@ import { CurrentUser } from 'src/auth/decorators/current-user';
 import { User } from 'src/user/entities/user.entity';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { getErrorCodeAndMessage } from 'src/utils/helper';
+import { OrganizationMemberService } from './organization-member.service';
 
 @Resolver('Organization')
 export class OrganizationsResolver {
-  constructor(private readonly organizationsService: OrganizationsService) {}
+  constructor(
+    private readonly organizationsService: OrganizationsService,
+    private readonly organizationMemberService: OrganizationMemberService,
+  ) {}
 
   @Mutation('createOrganization')
   async create(
@@ -95,6 +99,73 @@ export class OrganizationsResolver {
     try {
       await this.organizationsService.remove(id);
       return 'Organization removed successfully';
+    } catch (error) {
+      throw new HttpException(
+        getErrorCodeAndMessage(error),
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  @Mutation('addOrganizationMember')
+  async addOrganizationMember(
+    @CurrentUser() currentUser: User,
+    @Args('organizationId') organizationId: string,
+    @Args('userId') userId: string,
+  ) {
+    try {
+      await this.organizationMemberService.addMemberToOrganization({
+        organizationId,
+        userId,
+      });
+
+      return 'Member added successfully';
+    } catch (error) {
+      throw new HttpException(
+        getErrorCodeAndMessage(error),
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  @Mutation('removeOrganizationMember')
+  async removeOrganizationMember(
+    @CurrentUser() currentUser: User,
+    @Args('id') id: string,
+  ) {
+    try {
+      await this.organizationMemberService.remove(id);
+      return 'Member removed successfully';
+    } catch (error) {
+      throw new HttpException(
+        getErrorCodeAndMessage(error),
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  @Query('getOrganizationMembers')
+  getOrganizationMembers(
+    @CurrentUser() currentUser: User,
+    @Args('organizationId') organizationId: string,
+  ) {
+    try {
+      return this.organizationMemberService.find({ organizationId });
+    } catch (error) {
+      throw new HttpException(
+        getErrorCodeAndMessage(error),
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  @Query('getOrganizationMemberById')
+  getOrganizationMemberById(
+    @CurrentUser() currentUser: User,
+    @Args('id') id: string,
+  ) {
+    try {
+      return this.organizationMemberService.findOne({ id });
     } catch (error) {
       throw new HttpException(
         getErrorCodeAndMessage(error),
